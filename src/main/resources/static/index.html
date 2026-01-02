@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hospital Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+        }
+        section {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 25px;
+        }
+        input, button {
+            margin: 5px 0;
+            padding: 6px;
+        }
+        h2 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Hospital Management System</h1>
+
+    <!-- Patients -->
+    <section>
+        <h2>Patients</h2>
+        <input id="pName" placeholder="Name" />
+        <input id="pAge" placeholder="Age" />
+        <input id="pGender" placeholder="Gender" />
+        <input id="pPhone" placeholder="Phone" />
+        <br>
+        <button onclick="addPatient()">Add Patient</button>
+
+        <ul id="patientList"></ul>
+    </section>
+
+    <!-- Doctors -->
+    <section>
+        <h2>Doctors</h2>
+        <input id="dName" placeholder="Doctor Name" />
+        <input id="dSpec" placeholder="Specialization" />
+        <br>
+        <button onclick="addDoctor()">Add Doctor</button>
+
+        <ul id="doctorList"></ul>
+    </section>
+
+    <!-- Appointments -->
+    <section>
+        <h2>Appointments</h2>
+        <input id="aPatientId" placeholder="Patient ID" />
+        <input id="aDoctorId" placeholder="Doctor ID" />
+        <input id="aDate" type="date" />
+        <br>
+        <button onclick="bookAppointment()">Book Appointment</button>
+
+        <ul id="appointmentList"></ul>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
