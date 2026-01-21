@@ -1,36 +1,32 @@
 package com.codegnan.hospital_management.controller;
 
-import java.util.List;
-
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.codegnan.hospital_management.dto.AppointmentRequestDTO;
-import com.codegnan.hospital_management.dto.AppointmentResponseDTO;
+import com.codegnan.hospital_management.dto.*;
 import com.codegnan.hospital_management.service.AppointmentService;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/appointments")
-@CrossOrigin("*")
 public class AppointmentController {
 
-    private final AppointmentService service;
+    private final AppointmentService appointmentService;
 
-    public AppointmentController(AppointmentService service) {
-        this.service = service;
+    public AppointmentController(AppointmentService appointmentService) {
+        this.appointmentService = appointmentService;
     }
 
     @PostMapping
-    public AppointmentResponseDTO book(@RequestBody AppointmentRequestDTO dto) {
-        return service.bookAppointment(dto);
+    public AppointmentResponseDTO bookAppointment(
+            @RequestBody AppointmentRequestDTO dto,
+            Authentication authentication) {
+
+        return appointmentService.bookAppointment(dto, authentication);
     }
 
-    @GetMapping
-    public List<AppointmentResponseDTO> getAll() {
-        return service.getAllAppointments();
+    @GetMapping("/my")
+    public List<AppointmentResponseDTO> myAppointments(Authentication authentication) {
+        return appointmentService.getMyAppointments(authentication);
     }
 }

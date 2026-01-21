@@ -1,24 +1,27 @@
-<h1>Hospital Management System</h1>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hospital Management System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="center-page">
 
-<h2>Patients</h2>
-<input id="pName" placeholder="Name">
-<input id="pAge" placeholder="Age">
-<input id="pGender" placeholder="Gender">
-<input id="pPhone" placeholder="Phone">
-<button onclick="addPatient()">Add Patient</button>
-<ul id="patientList"></ul>
+  <div class="card" style="width:420px">
+    <h1>Hospital Management System</h1>
+    <p class="subtitle">
+      Secure appointment booking and administration portal
+    </p>
 
-<h2>Doctors</h2>
-<input id="dName" placeholder="Doctor Name">
-<input id="dSpec" placeholder="Specialization">
-<button onclick="addDoctor()">Add Doctor</button>
-<ul id="doctorList"></ul>
+    <button onclick="location.href='login.html'">User Login</button>
+    <br><br>
+    <button class="secondary" onclick="location.href='signup.html'">User Signup</button>
 
-<h2>Appointments</h2>
-<input id="aPatientId" placeholder="Patient ID">
-<input id="aDoctorId" placeholder="Doctor ID">
-<input id="aDate" type="date">
-<button onclick="bookAppointment()">Book</button>
-<ul id="appointmentList"></ul>
+    <hr style="margin:20px 0">
 
-<script src="script.js"></script>
+    <button class="admin" onclick="location.href='admin-login.html'">
+      Admin Login
+    </button>
+  </div>
+
+</body>
+</html>

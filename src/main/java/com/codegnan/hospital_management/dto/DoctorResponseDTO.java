@@ -5,7 +5,7 @@ public class DoctorResponseDTO {
 
     private Long id;
     private String name;
-    private String specialization;
+    private String department;
 
     // getters & setters
 
@@ -25,11 +25,11 @@ public class DoctorResponseDTO {
         this.name = name;
     }
 
-    public String getSpecialization() {
-        return specialization;
+    public String getDepartment() {
+        return department;
     }
 
-    public void setSpecialization(String specialization) {
-        this.specialization = specialization;
+    public void setDepartment(String department) {
+        this.department = department;
     }
 }

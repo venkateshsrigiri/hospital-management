@@ -1,72 +1,94 @@
 package com.codegnan.hospital_management.service;
 
-import java.util.List;
+import com.codegnan.hospital_management.dto.*;
+import com.codegnan.hospital_management.model.*;
+import com.codegnan.hospital_management.repo.*;
 
+import com.codegnan.hospital_management.security.AppUser;
+import com.codegnan.hospital_management.security.UserRepository;
+
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import com.codegnan.hospital_management.dto.AppointmentRequestDTO;
-import com.codegnan.hospital_management.dto.AppointmentResponseDTO;
-import com.codegnan.hospital_management.model.Appointment;
-import com.codegnan.hospital_management.model.Doctor;
-import com.codegnan.hospital_management.model.Patient;
-import com.codegnan.hospital_management.repo.AppointmentRepository;
-import com.codegnan.hospital_management.repo.DoctorRepository;
-import com.codegnan.hospital_management.repo.PatientRepository;
-
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentService {
 
-    private final AppointmentRepository appointmentRepo;
-    private final PatientRepository patientRepo;
-    private final DoctorRepository doctorRepo;
+    private final AppointmentRepository appointmentRepository;
+    private final PatientRepository patientRepository;
+    private final DoctorRepository doctorRepository;
+    private final UserRepository userRepository;
 
     public AppointmentService(
-            AppointmentRepository appointmentRepo,
-            PatientRepository patientRepo,
-            DoctorRepository doctorRepo) {
-        this.appointmentRepo = appointmentRepo;
-        this.patientRepo = patientRepo;
-        this.doctorRepo = doctorRepo;
+            AppointmentRepository appointmentRepository,
+            PatientRepository patientRepository,
+            DoctorRepository doctorRepository,
+            UserRepository userRepository) {
+
+        this.appointmentRepository = appointmentRepository;
+        this.patientRepository = patientRepository;
+        this.doctorRepository = doctorRepository;
+        this.userRepository = userRepository;
     }
 
-    public AppointmentResponseDTO bookAppointment(AppointmentRequestDTO dto) {
+    // ================= BOOK APPOINTMENT =================
+    public AppointmentResponseDTO bookAppointment(
+            AppointmentRequestDTO dto,
+            Authentication authentication) {
 
-        Patient patient = patientRepo.findById(dto.getPatientId())
-                .orElseThrow(() -> new RuntimeException("Patient not found"));
+        // 🔐 Logged-in user
+        Long userId = Long.parseLong(authentication.getName());
 
-        Doctor doctor = doctorRepo.findById(dto.getDoctorId())
+        AppUser user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // 👨‍⚕️ Doctor
+        Doctor doctor = doctorRepository.findById(dto.getDoctorId())
                 .orElseThrow(() -> new RuntimeException("Doctor not found"));
 
+        // 🧍 CREATE PATIENT (FIX)
+        Patient patient = new Patient();
+        patient.setName(dto.getName());
+        patient.setAge(dto.getAge());
+        patient.setGender(dto.getGender());
+        patient.setPhone(dto.getPhone());
+        patientRepository.save(patient);
+
+        // 📅 Appointment
         Appointment appointment = new Appointment();
+        appointment.setUser(user);
         appointment.setPatient(patient);
         appointment.setDoctor(doctor);
         appointment.setAppointmentDate(dto.getAppointmentDate());
         appointment.setStatus("BOOKED");
 
-        Appointment saved = appointmentRepo.save(appointment);
+        appointmentRepository.save(appointment);
 
-        AppointmentResponseDTO response = new AppointmentResponseDTO();
-        response.setAppointmentId(saved.getId());
-        response.setPatientName(patient.getName());
-        response.setDoctorName(doctor.getName());
-        response.setSpecialization(doctor.getSpecialization());
-        response.setAppointmentDate(saved.getAppointmentDate());
-        response.setStatus(saved.getStatus());
-
-        return response;
+        return mapToResponse(appointment);
     }
 
-    public List<AppointmentResponseDTO> getAllAppointments() {
-        return appointmentRepo.findAll().stream().map(a -> {
-            AppointmentResponseDTO dto = new AppointmentResponseDTO();
-            dto.setAppointmentId(a.getId());
-            dto.setPatientName(a.getPatient().getName());
-            dto.setDoctorName(a.getDoctor().getName());
-            dto.setSpecialization(a.getDoctor().getSpecialization());
-            dto.setAppointmentDate(a.getAppointmentDate());
-            dto.setStatus(a.getStatus());
-            return dto;
-        }).toList();
+    // ================= MY APPOINTMENTS =================
+    public List<AppointmentResponseDTO> getMyAppointments(Authentication authentication) {
+
+        Long userId = Long.parseLong(authentication.getName());
+
+        return appointmentRepository.findByUser_Id(userId)
+                .stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList()); // ✅ Java 8/11 safe
+    }
+
+    // ================= MAPPER =================
+    private AppointmentResponseDTO mapToResponse(Appointment a) {
+
+        AppointmentResponseDTO dto = new AppointmentResponseDTO();
+        dto.setDoctorName(a.getDoctor().getName());
+        dto.setDepartment(a.getDoctor().getDepartment());
+        dto.setAppointmentDate(a.getAppointmentDate());
+        dto.setStatus(a.getStatus());
+
+        return dto;
     }
 }

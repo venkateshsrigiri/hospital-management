@@ -2,22 +2,48 @@ package com.codegnan.hospital_management.dto;
 
 import java.time.LocalDate;
 
-
-
 public class AppointmentRequestDTO {
 
-    private Long patientId;
+    private String name;
+    private int age;
+    private String gender;
+    private String phone;
+
     private Long doctorId;
     private LocalDate appointmentDate;
 
-    // getters & setters
+    // ---------- getters & setters ----------
 
-    public Long getPatientId() {
-        return patientId;
+    public String getName() {
+        return name;
     }
 
-    public void setPatientId(Long patientId) {
-        this.patientId = patientId;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public Long getDoctorId() {
@@ -36,4 +62,3 @@ public class AppointmentRequestDTO {
         this.appointmentDate = appointmentDate;
     }
 }
-

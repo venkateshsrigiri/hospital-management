@@ -2,15 +2,19 @@ package com.codegnan.hospital_management.dto;
 
 import java.time.LocalDate;
 
-
 public class AppointmentResponseDTO {
 
     private Long appointmentId;
-    private String patientName;
-    private String doctorName;
-    private String specialization;
     private LocalDate appointmentDate;
     private String status;
+
+    private String patientName;
+    private int age;
+    private String gender;
+    private String phone;
+
+    private String doctorName;
+    private String department;
 
     // getters & setters
 
@@ -20,30 +24,6 @@ public class AppointmentResponseDTO {
 
     public void setAppointmentId(Long appointmentId) {
         this.appointmentId = appointmentId;
-    }
-
-    public String getPatientName() {
-        return patientName;
-    }
-
-    public void setPatientName(String patientName) {
-        this.patientName = patientName;
-    }
-
-    public String getDoctorName() {
-        return doctorName;
-    }
-
-    public void setDoctorName(String doctorName) {
-        this.doctorName = doctorName;
-    }
-
-    public String getSpecialization() {
-        return specialization;
-    }
-
-    public void setSpecialization(String specialization) {
-        this.specialization = specialization;
     }
 
     public LocalDate getAppointmentDate() {
@@ -61,5 +41,52 @@ public class AppointmentResponseDTO {
     public void setStatus(String status) {
         this.status = status;
     }
-}
 
+    public String getPatientName() {
+        return patientName;
+    }
+
+    public void setPatientName(String patientName) {
+        this.patientName = patientName;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getDoctorName() {
+        return doctorName;
+    }
+
+    public void setDoctorName(String doctorName) {
+        this.doctorName = doctorName;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+}

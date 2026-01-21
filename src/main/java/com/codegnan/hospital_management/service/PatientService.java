@@ -6,51 +6,70 @@ import org.springframework.stereotype.Service;
 
 import com.codegnan.hospital_management.dto.PatientRequestDTO;
 import com.codegnan.hospital_management.dto.PatientResponseDTO;
+import com.codegnan.hospital_management.model.Doctor;
 import com.codegnan.hospital_management.model.Patient;
+import com.codegnan.hospital_management.repo.DoctorRepository;
 import com.codegnan.hospital_management.repo.PatientRepository;
 
 @Service
 public class PatientService {
 
-    private final PatientRepository repo;
+    private final PatientRepository patientRepo;
+    private final DoctorRepository doctorRepo;
 
-    public PatientService(PatientRepository repo) {
-        this.repo = repo;
+    public PatientService(PatientRepository patientRepo, DoctorRepository doctorRepo) {
+        this.patientRepo = patientRepo;
+        this.doctorRepo = doctorRepo;
     }
 
     public PatientResponseDTO addPatient(PatientRequestDTO dto) {
-        Patient patient = new Patient();
-        patient.setName(dto.getName());
-        patient.setAge(dto.getAge());
-        patient.setGender(dto.getGender());
-        patient.setPhone(dto.getPhone());
+        Doctor doctor = doctorRepo.findById(dto.getDoctorId())
+                .orElseThrow(() -> new RuntimeException("Doctor not found"));
 
-        Patient saved = repo.save(patient);
+        Patient p = new Patient();
+        p.setName(dto.getName());
+        p.setAge(dto.getAge());
+        p.setGender(dto.getGender());
+        p.setPhone(dto.getPhone());
+        p.setDoctor(doctor);
 
-        PatientResponseDTO response = new PatientResponseDTO();
-        response.setId(saved.getId());
-        response.setName(saved.getName());
-        response.setAge(saved.getAge());
-        response.setGender(saved.getGender());
-        response.setPhone(saved.getPhone());
-
-        return response;
+        return map(patientRepo.save(p));
     }
 
     public List<PatientResponseDTO> getAllPatients() {
-        return repo.findAll().stream().map(p -> {
-            PatientResponseDTO dto = new PatientResponseDTO();
-            dto.setId(p.getId());
-            dto.setName(p.getName());
-            dto.setAge(p.getAge());
-            dto.setGender(p.getGender());
-            dto.setPhone(p.getPhone());
-            return dto;
-        }).toList();
+        return patientRepo.findAll().stream().map(this::map).toList();
+    }
+
+    public PatientResponseDTO updatePatient(Long id, PatientRequestDTO dto) {
+        Patient p = patientRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Patient not found"));
+
+        Doctor doctor = doctorRepo.findById(dto.getDoctorId())
+                .orElseThrow(() -> new RuntimeException("Doctor not found"));
+
+        p.setName(dto.getName());
+        p.setAge(dto.getAge());
+        p.setGender(dto.getGender());
+        p.setPhone(dto.getPhone());
+        p.setDoctor(doctor);
+
+        return map(patientRepo.save(p));
     }
 
     public void deletePatient(Long id) {
-        repo.deleteById(id);
+        patientRepo.deleteById(id);
+    }
+
+    private PatientResponseDTO map(Patient p) {
+        PatientResponseDTO dto = new PatientResponseDTO();
+        dto.setId(p.getId());
+        dto.setName(p.getName());
+        dto.setAge(p.getAge());
+        dto.setGender(p.getGender());
+        dto.setPhone(p.getPhone());
+        dto.setDoctorId(p.getDoctor().getId());
+        dto.setDoctorName(p.getDoctor().getName());
+        dto.setDepartment(p.getDoctor().getDepartment());
+        return dto;
     }
 }
-

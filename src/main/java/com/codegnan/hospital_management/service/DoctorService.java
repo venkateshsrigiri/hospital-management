@@ -19,18 +19,16 @@ public class DoctorService {
     }
 
     public DoctorResponseDTO addDoctor(DoctorRequestDTO dto) {
-
         Doctor doctor = new Doctor();
         doctor.setName(dto.getName());
-        doctor.setSpecialization(dto.getSpecialization());
+        doctor.setDepartment(dto.getDepartment());
 
         Doctor saved = doctorRepo.save(doctor);
 
         DoctorResponseDTO response = new DoctorResponseDTO();
         response.setId(saved.getId());
         response.setName(saved.getName());
-        response.setSpecialization(saved.getSpecialization());
-
+        response.setDepartment(saved.getDepartment());
         return response;
     }
 
@@ -39,14 +37,30 @@ public class DoctorService {
             DoctorResponseDTO dto = new DoctorResponseDTO();
             dto.setId(d.getId());
             dto.setName(d.getName());
-            dto.setSpecialization(d.getSpecialization());
+            dto.setDepartment(d.getDepartment());
             return dto;
         }).toList();
     }
 
-    public Doctor getDoctorById(Long id) {
-        return doctorRepo.findById(id)
+    // ✅ REQUIRED FOR ADMIN CONTROLLER
+    public DoctorResponseDTO updateDoctor(Long id, DoctorRequestDTO dto) {
+        Doctor doctor = doctorRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Doctor not found"));
+
+        doctor.setName(dto.getName());
+        doctor.setDepartment(dto.getDepartment());
+
+        Doctor saved = doctorRepo.save(doctor);
+
+        DoctorResponseDTO response = new DoctorResponseDTO();
+        response.setId(saved.getId());
+        response.setName(saved.getName());
+        response.setDepartment(saved.getDepartment());
+        return response;
+    }
+
+    // ✅ THIS METHOD FIXES YOUR ERROR
+    public void deleteDoctor(Long id) {
+        doctorRepo.deleteById(id);
     }
 }
-

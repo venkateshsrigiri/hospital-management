@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h2>User Dashboard</h2>
+  <button class="logout" onclick="location.href='/logout'">Logout</button>
+</header>
+
+<section class="container">
+
+  <div class="card">
+    <h3>Book Appointment</h3>
+    <p class="subtitle">Enter patient details and choose a doctor</p>
+
+    <input id="pName" placeholder="Patient Name">
+    <input id="pAge" placeholder="Age">
+    <input id="pGender" placeholder="Gender">
+    <input id="pPhone" placeholder="Phone">
+
+    <select id="doctorSelect">
+      <option>Loading doctors...</option>
+    </select>
+
+    <input id="apptDate" type="date">
+
+    <button onclick="bookAppointment()">Book Appointment</button>
+  </div>
+
+  <div class="card">
+    <h3>My Appointments</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Doctor</th>
+          <th>Department</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="appointmentList"></tbody>
+    </table>
+  </div>
+
+</section>
+
+<script src="user.js"></script>
+</body>
+</html>

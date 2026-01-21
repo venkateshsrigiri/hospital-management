@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create Account</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="center-page">
+
+  <div class="card" style="width:380px">
+    <h2>Create Account</h2>
+    <p class="subtitle">Register to book hospital appointments</p>
+
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+
+    <button onclick="signup()">Signup</button>
+
+    <p class="muted">
+      Already registered?
+      <a href="login.html">Login</a>
+    </p>
+  </div>
+
+<script>
+function signup() {
+  if (!username.value || !password.value) {
+    alert("Please fill all fields");
+    return;
+  }
+
+  fetch("/api/auth/signup", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: username.value,
+      password: password.value
+    })
+  })
+  .then(res => res.text())
+  .then(msg => {
+    alert(msg);
+    window.location.href = "login.html";
+  });
+}
+</script>
+
+</body>
+</html>
